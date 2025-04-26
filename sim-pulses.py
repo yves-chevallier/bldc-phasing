@@ -50,8 +50,7 @@ logs = pd.DataFrame(columns=["time", "theta", "ialpha", "ibeta"])
 theta_init = 180 / 180 * np.pi
 state = np.array([0.0, 0.0, 0.0, 0.0, theta_init / motor.pole_pairs])  # [ia, ib, ic, omega, theta]
 
-duty_a, duty_b, duty_c = 0.5, 0.5, 0.5
-
+dc = np.ones(3) * 0.5
 
 #thetas = np.array([0, 1, 0.5, -0.5, 0.25, -0.75, 0.75, -0.25]) * np.pi
 
@@ -98,10 +97,10 @@ for step in range(steps):
     id_ref = 0.0
 
     # Application PWM -> tensions
-    va, vb, vc = pwm.duty_to_voltage(duty_a, duty_b, duty_c)
+    vuvw = pwm.duty_to_voltage(dc)
 
     # Simulation moteur
-    state = motor.simulate_step_euler(state, (va, vb, vc), dt)
+    state = motor.simulate_step_euler(state, vuvw, dt)
     ia, ib, ic, omega, theta = state
 
     # Mesure
@@ -118,7 +117,7 @@ for step in range(steps):
 
     valpha, vbeta = inverse_park_transform(vd, vq, theta_elec)
 
-    duty_a, duty_b, duty_c = svm(valpha, vbeta, pwm.vdc)
+    dc = np.array(svm(valpha, vbeta, pwm.vdc))
 
     # Logging
     logs.loc[step] = [t, theta, ialpha_meas, ibeta_meas]

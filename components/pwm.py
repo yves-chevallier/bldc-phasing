@@ -1,15 +1,12 @@
 import numpy as np
+from numpy.typing import NDArray
 
 class PWM:
     def __init__(self, vdc):
-        self.vdc = vdc  # Tension continue d'alimentation (ex: 48V)
+        self.vdc = vdc
 
-    def duty_to_voltage(self, dc_u, dc_v, dc_w):
-        vu = (2 * dc_u - 1) * (self.vdc / 2)
-        vv = (2 * dc_v - 1) * (self.vdc / 2)
-        vw = (2 * dc_w - 1) * (self.vdc / 2)
-        return vu, vv, vw
-
+    def duty_to_voltage(self, dc: NDArray[np.float64]) -> NDArray[np.float64]:
+        return (2.0 * dc - 1.0) * (self.vdc / 2.0)
 
 class CenterAlignedPWM:
     """
@@ -35,8 +32,8 @@ class CenterAlignedPWM:
 
     def sample(self, dc_u: float, dc_v: float, dc_w: float):
         """
-        Retourne les tensions instantanées U/V/W (+Vdc/2 ou −Vdc/2) à l’instant courant,
-        puis avance la porteuse d’un pas dt.
+        Retourne les tensions instantanées U/V/W (+Vdc/2 ou -Vdc/2) à l'instant courant,
+        puis avance la porteuse d'un pas dt.
         """
         # consignes normalisées [0..1] -> valeurs comparateur [-1..+1]
         mu = 2*dc_u - 1
