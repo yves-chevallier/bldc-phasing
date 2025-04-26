@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 class BrushlessMotor:
-    def __init__(self, R, L, kt, ke, J, pole_pairs, load_torque=0.0):
+    def __init__(self, R, L, kt, ke, J, pole_pairs, load_torque=0.0, friction_coefficient=0.0):
         """
         Initialize a Brushless Motor model.
 
@@ -21,6 +21,8 @@ class BrushlessMotor:
             Number of pole pairs
         load_torque : float
             Constant external load torque (Nm)
+        friction_coefficient : float
+            Viscous friction coefficient (Nm.s/rad)
         """
         self.R = R
         self.L = L
@@ -29,6 +31,7 @@ class BrushlessMotor:
         self.J = J
         self.pole_pairs = pole_pairs
         self.load_torque = load_torque
+        self.friction_coefficient = friction_coefficient
 
     def electrical_back_emf(self, theta):
         ea = self.ke * np.sin(self.pole_pairs * theta)
@@ -52,7 +55,8 @@ class BrushlessMotor:
         dic_dt = (vc - self.R * ic - ec) / self.L
 
         Te = self.torque(ia, ib, ic, theta)
-        domega_dt = (Te - self.load_torque) / self.J
+        friction = self.friction_coefficient * omega
+        domega_dt = (Te - self.load_torque - friction) / self.J
         dtheta_dt = omega
 
         return [dia_dt, dib_dt, dic_dt, domega_dt, dtheta_dt]
