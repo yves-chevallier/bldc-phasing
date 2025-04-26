@@ -2,12 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from motor import BrushlessMotor
-from pwm import PWM
-from adc import ADC
-from transforms import clarke_transform, park_transform, inverse_park_transform
-from pi_controller import PIController
-from svm import svm
+from components.motor import BrushlessMotor
+from components.pwm import PWM
+from components.adc import ADC
+from components.transforms import clarke_transform, park_transform, inverse_park_transform
+from components.pi_controller import PIController
+from components.svm import svm
 
 # Paramètres PWM
 f_pwm = 20e3  # 20 kHz

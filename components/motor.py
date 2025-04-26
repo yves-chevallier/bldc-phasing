@@ -2,7 +2,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 class BrushlessMotor:
-    def __init__(self, R, L, kt, ke, J, pole_pairs, load_torque=0.0, friction_coefficient=0.0):
+    def __init__(self, R, L, kt, ke, J, pole_pairs, load_torque=0.0, friction_coefficient=0.01):
         """
         Initialize a Brushless Motor model.
 
