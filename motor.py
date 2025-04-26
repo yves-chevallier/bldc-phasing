@@ -2,14 +2,33 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 class BrushlessMotor:
-    def __init__(self):
-        self.R = 0.304       # Ohms (phase neutre)
-        self.L = 0.2315e-3   # Henry
-        self.kt = 0.0369     # Nm/A
-        self.ke = 0.0369     # V.s/rad
-        self.J = 2.4e-5      # kg.m^2
-        self.pole_pairs = 8  # paires de pôles
-        self.load_torque = 0 # Nm
+    def __init__(self, R, L, kt, ke, J, pole_pairs, load_torque=0.0):
+        """
+        Initialize a Brushless Motor model.
+
+        Parameters:
+        R : float
+            Phase-to-neutral resistance (Ohms)
+        L : float
+            Phase-to-neutral inductance (Henrys)
+        kt : float
+            Torque constant (Nm/A)
+        ke : float
+            Back-EMF constant (V.s/rad)
+        J : float
+            Rotor inertia (kg.m^2)
+        pole_pairs : int
+            Number of pole pairs
+        load_torque : float
+            Constant external load torque (Nm)
+        """
+        self.R = R
+        self.L = L
+        self.kt = kt
+        self.ke = ke
+        self.J = J
+        self.pole_pairs = pole_pairs
+        self.load_torque = load_torque
 
     def electrical_back_emf(self, theta):
         ea = self.ke * np.sin(self.pole_pairs * theta)
