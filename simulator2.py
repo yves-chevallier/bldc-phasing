@@ -41,16 +41,16 @@ logs = pd.DataFrame(columns=["time", "omega", "theta", "ia", "ib", "ic", "id", "
 
 state = np.array([0.0, 0.0, 0.0, 0.0, 0.0])  # [ia, ib, ic, omega, theta]
 
-duty_a, duty_b, duty_c = 0.5, 0.5, 0.5
+dc = np.ones(3) * 0.5
 
 for step in range(steps):
     t = step * dt
 
     iq_ref, id_ref = 1.0, 0.0
 
-    va, vb, vc = pwm.duty_to_voltage(duty_a, duty_b, duty_c)
+    vuvw = pwm.duty_to_voltage(dc)
 
-    state = motor.simulate_step(state, (va, vb, vc), dt)
+    state = motor.simulate_step(state, vuvw, dt)
     ia, ib, ic, omega, theta = state
 
     ia_adc, ib_adc, ic_adc = adc.sample(ia, ib, ic)
@@ -64,7 +64,7 @@ for step in range(steps):
 
     valpha, vbeta = inverse_park_transform(vd, vq, theta_elec)
 
-    duty_a, duty_b, duty_c = svm(valpha, vbeta, pwm.vdc)
+    dc = np.array(svm(valpha, vbeta, pwm.vdc))
 
     logs.loc[step] = [t, omega, theta, ia, ib, ic, id_meas, iq_meas, iq_ref]
 
