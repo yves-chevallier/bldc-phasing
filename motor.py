@@ -8,7 +8,7 @@ class BrushlessMotor:
         self.kt = 0.0369     # Nm/A
         self.ke = 0.0369     # V.s/rad
         self.J = 2.4e-5      # kg.m^2
-        self.pole_pairs = 4  # paires de pôles
+        self.pole_pairs = 8  # paires de pôles
         self.load_torque = 0 # Nm
 
     def electrical_back_emf(self, theta):

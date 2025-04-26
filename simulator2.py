@@ -63,15 +63,16 @@ for step in range(steps):
     ia_adc, ib_adc, ic_adc = adc.sample(ia, ib, ic)
 
     # Transformations Clarke & Park
+    theta_elec = motor.pole_pairs * theta
     ialpha, ibeta = clarke_transform(ia_adc, ib_adc, ic_adc)
-    id_meas, iq_meas = park_transform(ialpha, ibeta, theta)
+    id_meas, iq_meas = park_transform(ialpha, ibeta, theta_elec)
 
     # Contrôleurs PI sur id et iq
     vd = id_controller.compute(0.0 - id_meas)  # id_ref = 0
     vq = iq_controller.compute(iq_ref - iq_meas)
 
     # Inverse Park pour générer v_alpha, v_beta
-    valpha, vbeta = inverse_park_transform(vd, vq, theta)
+    valpha, vbeta = inverse_park_transform(vd, vq, theta_elec)
 
     # Modulateur SVM --> Duty cycles
     duty_a, duty_b, duty_c = svm(valpha, vbeta, pwm.vdc)
