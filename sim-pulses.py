@@ -101,7 +101,7 @@ for step in range(steps):
     va, vb, vc = pwm.duty_to_voltage(duty_a, duty_b, duty_c)
 
     # Simulation moteur
-    state = motor.simulate_step(state, (va, vb, vc), dt)
+    state = motor.simulate_step_euler(state, (va, vb, vc), dt)
     ia, ib, ic, omega, theta = state
 
     # Mesure

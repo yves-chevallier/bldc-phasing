@@ -4,11 +4,12 @@ class PWM:
     def __init__(self, vdc):
         self.vdc = vdc  # Tension continue d'alimentation (ex: 48V)
 
-    def duty_to_voltage(self, duty_a, duty_b, duty_c):
-        va = (2 * duty_a - 1) * (self.vdc / 2)
-        vb = (2 * duty_b - 1) * (self.vdc / 2)
-        vc = (2 * duty_c - 1) * (self.vdc / 2)
-        return va, vb, vc
+    def duty_to_voltage(self, dc_u, dc_v, dc_w):
+        vu = (2 * dc_u - 1) * (self.vdc / 2)
+        vv = (2 * dc_v - 1) * (self.vdc / 2)
+        vw = (2 * dc_w - 1) * (self.vdc / 2)
+        return vu, vv, vw
+
 
 class CenterAlignedPWM:
     """
@@ -32,19 +33,19 @@ class CenterAlignedPWM:
             self.carrier = -1.0
             self.dir = +1
 
-    def sample(self, duty_a: float, duty_b: float, duty_c: float):
+    def sample(self, dc_u: float, dc_v: float, dc_w: float):
         """
         Retourne les tensions instantanées U/V/W (+Vdc/2 ou −Vdc/2) à l’instant courant,
         puis avance la porteuse d’un pas dt.
         """
         # consignes normalisées [0..1] -> valeurs comparateur [-1..+1]
-        ma = 2*duty_a - 1
-        mb = 2*duty_b - 1
-        mc = 2*duty_c - 1
+        mu = 2*dc_u - 1
+        mv = 2*dc_v - 1
+        mw = 2*dc_w - 1
 
-        va =  +self.vdc/2 if ma > self.carrier else -self.vdc/2
-        vb =  +self.vdc/2 if mb > self.carrier else -self.vdc/2
-        vc =  +self.vdc/2 if mc > self.carrier else -self.vdc/2
+        vu =  +self.vdc/2 if mu > self.carrier else -self.vdc/2
+        vv =  +self.vdc/2 if mv > self.carrier else -self.vdc/2
+        vw =  +self.vdc/2 if mw > self.carrier else -self.vdc/2
 
         self._update_carrier()
-        return va, vb, vc
+        return vu, vv, vw

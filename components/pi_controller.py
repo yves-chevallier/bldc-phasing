@@ -14,5 +14,4 @@ class PIController:
     def compute(self, error):
         self.integral += error * self.dt
         output = self.kp * error + self.ki * self.integral
-        output = np.clip(output, self.min_out, self.max_out)
-        return output
+        return np.clip(output, self.min_out, self.max_out)
